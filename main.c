@@ -100,7 +100,7 @@ void run(Session *session)
 	} while(option != EXIT);
 }
 
-int main()
+int main(void)
 {
 	Session	session;
 	init_session(&session);

@@ -8,7 +8,10 @@ void	restart_session_game(Session *session)
 
 void	init_session(Session *session)
 {
-	// ToDo
+	// TODO
+	for (int i=0; i <= MAX_LEVELS; i++)
+		session->best_score[i] = 0;
+	init_game(&session->current_game);
 }
 
 void	print_session(Session *session)

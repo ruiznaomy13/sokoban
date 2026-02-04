@@ -20,8 +20,8 @@ typedef struct
 {	
 	int			score;	// Current score
 	unsigned	level;	// Current level
-	State state;		// State status
-} Game;
+	State		state;	// State status
+}				Game;
 
 typedef enum
 {
