@@ -8,6 +8,13 @@
 #define	MAX_ROWS 8
 #define	MAX_COLUMNS 8
 
+typedef	struct
+{
+	int	pos_x;
+	int	pos_y;
+}		Player;
+
+
 /// LAB 1 - data structures
 typedef struct
 {

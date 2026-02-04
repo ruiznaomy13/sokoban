@@ -98,16 +98,51 @@ void print_game(Game game)
 	// ToDo
 }
 
-
 bool is_terminal(State s)
 {
 	// ToDo
 	return false;
 }
 
-State move(State s, Option o)
+bool	valid_move(char **grid)
 {
-	// ToDo
+	return (0);
+}
+
+void	update_grid(char **grid, char c, int x, int y)
+{
+	// 
+}
+
+Player	player_pos(const State *s)
+{
+	Player	pos = {-1,-1};
+
+	for (size_t i = 0; i < s->rows; i++)
+	{
+		for (size_t j = 0; j < s->columns; j++)
+		{
+			if (s->grid[i][j] == 'A')
+			{
+				pos.pos_y = i;
+				pos.pos_x = j;
+				return (pos);
+			}
+		}
+	}
+	return (pos);
+}
+
+/*
+	@return: new State after applying a new move
+*/
+State	move(State s, Option o)
+{
+	// TODO
+	// 1 -> up		2 -> right		3 -> down		4 -> left
+	// check move
+	
+
 	return s;
 }
 
