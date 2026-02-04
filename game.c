@@ -65,7 +65,7 @@ bool set_level(State *s, unsigned level)
 	return true;
 }
 
-void	init_game(Game *game)
+void init_game(Game *game)
 {
 	game->score = 0;
 	game->level = 0;
@@ -86,22 +86,32 @@ void choose_level(Game *game)
 	} while(!set_level(&game->state, game->level));
 }
 
-
 /**** LAB 1 - functions to program (start here) ****/
-void print_state(State s)
-{
-	// ToDo
+void print_state(State s){
+	for(int i = 0; i < s.rows; i++){
+		for(int j = 0; j < s.columns; j++){
+			printf("%c", s.grid[i][j]);
+		}
+		printf("\n");
+	}
 }
 
 void print_game(Game game)
 {
-	// ToDo
+	printf("Level: %d , Score: %d\n", game.level, game.score);
+	print_state(game.state);
 }
 
 
 bool is_terminal(State s)
 {
-	// ToDo
+	for(int i= 0; i< s.rows; i++){
+		for(int j= 0; j < s.columns; j++){
+			if(s.grid[i][j] == "B"){
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
