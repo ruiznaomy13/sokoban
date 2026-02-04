@@ -2,7 +2,7 @@
 
 
 /**** LAB 1 - given functions ****/
-void print_options()
+void	print_options()
 {
 	printf("Options:\n");
 	printf("\t%d. Up | %d. Right | %d. Down | %d. Left |\n", MOVE_UP, MOVE_RIGHT, MOVE_DOWN, MOVE_LEFT);
@@ -10,12 +10,12 @@ void print_options()
 	printf("\t%d. Quit game\n", QUIT_GAME);
 }
 
-bool is_valid_option(Option o)
+bool	is_valid_option(Option o)
 {
 	return ((MOVE_UP <= o) && (o<=QUIT_GAME));
 }
 
-bool set_level(State *s, unsigned level)
+bool	set_level(State *s, unsigned level)
 {
 	switch(level)
 	{
@@ -65,18 +65,19 @@ bool set_level(State *s, unsigned level)
 	return true;
 }
 
-void init_game(Game *game)
+void	init_game(Game *game)
 {
 	game->score = 0;
 	game->level = 0;
 	game->state.rows = MAX_ROWS;
 	game->state.columns = MAX_COLUMNS;
+
 	for(int i=0; i<MAX_ROWS; ++i)
 		for(int j=0; j<MAX_COLUMNS; ++j)
 			game->state.grid[i][j] = '.';
 }
 
-void choose_level(Game *game)
+void	choose_level(Game *game)
 {
 	game->score = 0;
 
@@ -87,7 +88,8 @@ void choose_level(Game *game)
 }
 
 /**** LAB 1 - functions to program (start here) ****/
-void print_state(State s){
+void	print_state(State s)
+{
 	for(int i = 0; i < s.rows; i++){
 		for(int j = 0; j < s.columns; j++){
 			printf("%c", s.grid[i][j]);
@@ -96,51 +98,111 @@ void print_state(State s){
 	}
 }
 
-void print_game(Game game)
+void	print_game(Game game)
 {
 	printf("Level: %d , Score: %d\n", game.level, game.score);
 	print_state(game.state);
 }
 
-bool is_terminal(State s)
+bool	is_terminal(State s)
 {
 	for(int i= 0; i< s.rows; i++){
-		for(int j= 0; j < s.columns; j++){
-			if(s.grid[i][j] == "B"){
+		for(int j= 0; j < s.columns; j++)
+		{
+			if(s.grid[i][j] == BOX)
 				return true;
-			}
 		}
 	}
 	return false;
 }
 
-bool	valid_move(char **grid)
+char	change_cell(char c, int box)
 {
-	return (0);
-}
-
-void	update_grid(char **grid, char c, int x, int y)
-{
-	// 
-}
-
-Player	player_pos(const State *s)
-{
-	Player	pos = {-1,-1};
-
-	for (size_t i = 0; i < s->rows; i++)
+	switch (c)
 	{
-		for (size_t j = 0; j < s->columns; j++)
+		case PLAYER:
+			return EMPTY;
+		case BOX:
+			return PLAYER;
+		case EMPTY:
+			return (box ? BOX : PLAYER);
+		case GOAL:
+			return (box ? B_GOAL : P_GOAL);
+		case P_GOAL:
+			return GOAL;
+		case B_GOAL:
+			return PLAYER;
+		default:
+			return c;
+	}
+}
+
+
+bool	valid_move(char **grid, Pos new_pos)
+{
+	if (new_pos.pos_x >= MAX_COLUMNS || new_pos.pos_x < 0)
+		return (0);
+	else if (new_pos.pos_y >= MAX_ROWS || new_pos.pos_y < 0)
+		return (0);
+	if (grid[new_pos.pos_y][new_pos.pos_x] == WALL)
+		return (0);
+	return (1);
+}
+
+Pos	new_position(Pos curr, Option o)
+{
+	Pos	p = curr;
+
+	if (o == MOVE_DOWN)
+		p.pos_y += 1;
+	else if (o == MOVE_UP)
+		p.pos_y -=1;
+	else if (o == MOVE_LEFT)
+		p.pos_x -= 1;
+	else
+		p.pos_x += 1;
+
+	return p;
+}
+
+void	update_grid(char (*grid)[8], Option o, Pos pos)
+{
+	Pos	new = new_position(pos, o);
+
+	if (!valid_move(grid, new))
+		return;
+
+	char	tmp = grid[pos.pos_y][pos.pos_x];
+	char	dest = grid[new.pos_y][new.pos_x];
+
+	grid[pos.pos_y][pos.pos_x] = change_cell(tmp, 0);
+	if (dest == BOX)
+	{
+		Pos	next = new_position(new, o);
+		if (!valid_move(grid, next))
 		{
-			if (s->grid[i][j] == 'A')
+			grid[pos.pos_y][pos.pos_x] = tmp;
+			return;
+		}
+		grid[next.pos_y][next.pos_x] = change_cell(dest, 1);
+	}
+
+	grid[new.pos_y][new.pos_x] = change_cell(dest, 0);
+}
+
+void	player_pos(Pos *pos, State s)
+{
+	for (size_t i = 0; i < s.rows; i++)
+	{
+		for (size_t j = 0; j < s.columns; j++)
+		{
+			if (s.grid[i][j] == PLAYER)
 			{
-				pos.pos_y = i;
-				pos.pos_x = j;
-				return (pos);
+				pos->pos_y = i;
+				pos->pos_x = j;
 			}
 		}
 	}
-	return (pos);
 }
 
 /*
@@ -148,10 +210,11 @@ Player	player_pos(const State *s)
 */
 State	move(State s, Option o)
 {
-	// TODO
-	// 1 -> up		2 -> right		3 -> down		4 -> left
-	// check move
-	
+	Pos	pos;
+
+	player_pos(&pos, s);
+	update_grid(s.grid, o, pos);
+	print_state(s);
 
 	return s;
 }

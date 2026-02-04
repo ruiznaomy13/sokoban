@@ -1,6 +1,3 @@
-#ifndef _GAME_H_
-#define _GAME_H_
-
 #include "common.h"
 #include "utils.h"
 
@@ -8,11 +5,12 @@
 #define	MAX_ROWS 8
 #define	MAX_COLUMNS 8
 
+
 typedef	struct
 {
-	int	pos_x;
 	int	pos_y;
-}		Player;
+	int	pos_x;
+}		Pos;
 
 
 /// LAB 1 - data structures
@@ -48,12 +46,15 @@ void	init_game(Game *g);
 void	choose_level(Game *g);
 
 /**** LAB 1 - functions to program (start here) ****/
+// AUXILIAR FUNCTIONS
+void	player_pos(Pos *pos, State s); // look for the player position
+void	update_grid(char (*grid)[8], Option o, Pos pos); //change the grid to new one
+Pos		new_position(Pos curr, Option o); // return the new position BOX or Pos
+bool	valid_move(char (*grid)[8], Pos new_pos); // True if the move is valid
+char	change_cell(char c, int box); //
+
 void	print_state(State s);
 void	print_game(Game g);
 bool	is_terminal(State s); // True if all boxes are in goal locations, otherwise false
 State	move(State b, Option o); // move/push in one of the 4 cardinal directions
 /**** LAB 1 - functions to program (end here) ****/
-
-
-#endif
-

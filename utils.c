@@ -2,19 +2,21 @@
 
 int	read_int()
 {
-	int res, val;
-	do{
+	int	res, val;
+
+	do {
 		res = scanf("%d", &val);
-	}while(res != 1);
+	} while(res != 1);
+
 	return val;
 }
 
 void	read_filename(char* filename)
 {
 	int res;
-	do{
+	do {
 		res = scanf("%s", filename);
-	}while(res != 1);
+	} while(res != 1);
 }
 
 int	max(int a, int b)
