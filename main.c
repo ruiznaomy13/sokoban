@@ -103,6 +103,7 @@ void run(Session *session)
 int main(void)
 {
 	Session	session;
+
 	init_session(&session);
 	run(&session);
 }

@@ -1,10 +1,10 @@
 #ifndef _MAIN_H_
-#define _MAIN_H_
+# define _MAIN_H_
 
-#include "common.h"
-#include "utils.h"
-#include "game.h"
-#include "session.h"
+# include "common.h"
+# include "utils.h"
+# include "game.h"
+# include "session.h"
 
 void	run_game(Session *session);
 void	new_game(Session *session);

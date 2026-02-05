@@ -1,4 +1,6 @@
-#include "game.h"
+#ifndef SESSION_H
+# define SESSION_H
+# include "game.h"
 
 #define	MAX_LEVELS 4
 
@@ -15,3 +17,4 @@ void	init_session(Session *s);
 void	print_session(Session *s);
 void	new_game_score(Session *s);
 
+#endif
