@@ -104,17 +104,17 @@ void	print_game(Game game)
 	printf("Level: %d , Score: %d\n", game.level, game.score);
 	print_state(game.state);
 }
-// If the grid location is the same as of the box if the box this function return true
+// Returns true if all goal locations conatains boxes, false otherwise
 bool	is_terminal(State s)
 {
 	for(int i= 0; i< s.rows; i++){
 		for(int j= 0; j < s.columns; j++)
 		{
-			if(s.grid[i][j] == BOX)
-				return true;
+			if(s.grid[i][j] == GOAL)
+				return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 char	change_cell(char c, int box)
