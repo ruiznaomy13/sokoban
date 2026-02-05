@@ -11,17 +11,10 @@ void restart_session_game(Session *session)
 // And it also initialise the current game by using init_game function
 void init_session(Session *session)
 {
-<<<<<<< HEAD
-	// TODO
-	for (int i=0; i <= MAX_LEVELS; i++)
-		session->best_score[i] = 0;
-	init_game(&session->current_game);
-=======
 	for (int i=1; i <= MAX_LEVELS; i++){
 		session->best_score[i] = 0; // setting best score to zero for all levels
 	}
 	restart_session_game(session);
->>>>>>> dfe2c930312129b25749ea62b0a590d6b6456d1d
 }
 // Prints the best score and the current game data
 void print_session(Session *session)
