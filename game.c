@@ -88,6 +88,7 @@ void	choose_level(Game *game)
 }
 
 /**** LAB 1 - functions to program (start here) ****/
+// Using for loops to iterate over the whole grid and printing each point of it
 void	print_state(State s)
 {
 	for(int i = 0; i < s.rows; i++){
@@ -97,13 +98,13 @@ void	print_state(State s)
 		printf("\n");
 	}
 }
-
+// To print out the level, score and state of the game
 void	print_game(Game game)
 {
 	printf("Level: %d , Score: %d\n", game.level, game.score);
 	print_state(game.state);
 }
-
+// If the grid location is the same as of the box if the box this function return true
 bool	is_terminal(State s)
 {
 	for(int i= 0; i< s.rows; i++){
