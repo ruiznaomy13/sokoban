@@ -88,6 +88,7 @@ void	choose_level(Game *game)
 }
 
 /**** LAB 1 - functions to program (start here) ****/
+// Using for loops to iterate over the whole grid and printing each point of it
 void	print_state(State s)
 {
 	for(int i = 0; i < s.rows; i++){
@@ -97,23 +98,28 @@ void	print_state(State s)
 		printf("\n");
 	}
 }
-
+// To print out the level, score and state of the game
 void	print_game(Game game)
 {
 	printf("Level: %d , Score: %d\n", game.level, game.score);
 	print_state(game.state);
 }
-
+// Returns true if all goal locations conatains boxes, false otherwise
 bool	is_terminal(State s)
 {
 	for(int i= 0; i< s.rows; i++){
 		for(int j= 0; j < s.columns; j++)
 		{
+<<<<<<< HEAD
 			if(s.grid[i][j] == B_GOAL)
 				return true;
+=======
+			if(s.grid[i][j] == GOAL)
+				return false;
+>>>>>>> dfe2c930312129b25749ea62b0a590d6b6456d1d
 		}
 	}
-	return false;
+	return true;
 }
 
 char	change_cell(char c, bool box)
