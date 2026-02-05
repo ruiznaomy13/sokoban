@@ -10,8 +10,8 @@
 
 typedef	struct
 {
-	int	pos_y;
-	int	pos_x;
+	int y;
+	int	x;
 }		Pos;
 
 
@@ -24,7 +24,7 @@ typedef struct
 }			State;
 
 typedef struct
-{	
+{
 	int			score;	// Current score
 	unsigned	level;	// Current level
 	State		state;	// State status
@@ -50,10 +50,10 @@ void	choose_level(Game *g);
 /**** LAB 1 - functions to program (start here) ****/
 // AUXILIAR FUNCTIONS
 bool	player_pos(State s, Pos *pos); // look for the player position
-void	update_grid(char (*grid)[MAX_COLUMNS], Option o, Pos pos); //change the grid to new one
+void	update_grid(char grid[][MAX_COLUMNS], Option o, Pos pos); //change the grid to new one
 Pos		new_position(Pos curr, Option o); // return the new position BOX or Pos
-bool	valid_move(char (*grid)[MAX_COLUMNS], Pos new_pos, bool box, Option o); // True if the move is valid
-char	change_cell(char c, bool box); //
+bool	valid_move(char grid[][MAX_COLUMNS], Pos new_pos, bool box, Option o); // True if the move is valid
+char	change_cell(char c, bool box);
 
 void	print_state(State s);
 void	print_game(Game g);

@@ -84,7 +84,7 @@ void	choose_level(Game *game)
 	do {
 		printf("[INFO] Choose the level [1-4]: ");
 		game->level = read_int();
-	} while(!set_level(&game->state, game->level));
+	} while (!set_level(&game->state, game->level));
 }
 
 /**** LAB 1 - functions to program (start here) ****/
@@ -92,18 +92,19 @@ void	choose_level(Game *game)
 void	print_state(State s)
 {
 	for(int i = 0; i < s.rows; i++){
-		for(int j = 0; j < s.columns; j++){
+		for(int j = 0; j < s.columns; j++)
 			printf("%c", s.grid[i][j]);
-		}
 		printf("\n");
 	}
 }
+
 // To print out the level, score and state of the game
 void	print_game(Game game)
 {
 	printf("Level: %d , Score: %d\n", game.level, game.score);
 	print_state(game.state);
 }
+
 // Returns true if all goal locations conatains boxes, false otherwise
 bool	is_terminal(State s)
 {
@@ -117,9 +118,16 @@ bool	is_terminal(State s)
 	return true;
 }
 
+/*
+ * @brief: Determine the new value of a grid cell after a move
+ *
+ * @details: Updates the character of a cell based on whether the player or a box
+ *          is moving into or out of it.
+ *
+ * @return: The new character for the cell
+ */
 char	change_cell(char c, bool box)
 {
-	printf("\n\nCHANGE: \t%c -----> [?] (%d)\n\n", c, box);
 	switch (c)
 	{
 		case PLAYER:
@@ -139,93 +147,117 @@ char	change_cell(char c, bool box)
 	}
 }
 
-bool in_bounds(Pos p)
+
+bool    in_bounds(Pos p)
 {
-	return (p.pos_y >= 0 && p.pos_y < MAX_ROWS
-		&& p.pos_x >= 0 && p.pos_x < MAX_COLUMNS);
+	return (p.y >= 0 && p.y < MAX_ROWS
+		&& p.x >= 0 && p.x < MAX_COLUMNS);
 }
 
-
-bool	valid_move(char (*grid)[MAX_COLUMNS], Pos new_pos, bool box, Option o)
+/*
+ * @brief: Check whether a move is valid
+ *
+ * @details: Validates if the new player position (and box if pushed) is within bounds
+ *          and does not collide with walls or other boxes.
+ *
+ * @return: True if the move is valid, false otherwise
+ */
+bool	valid_move(char grid[][MAX_COLUMNS], Pos new_pos, bool box, Option o)
 {
-	if (!in_bounds(new_pos))
-		return (0);
+	if (!in_bounds(new_pos)) // check the bounds (in this case maybe is not usefull)
+		return (false);
 
-	if (grid[new_pos.pos_y][new_pos.pos_x] == WALL)
-		return (0);
+	if (grid[new_pos.y][new_pos.x] == WALL) // check if in new position is a wall
+		return (false);
 
-	if (box)
+	if (box) // also check for box
 	{
 		Pos next_pos = new_position(new_pos, o);
 
 		if (!in_bounds(next_pos))
-			return (0);
+			return (false);
 
-		if (grid[next_pos.pos_y][next_pos.pos_x] == WALL
-		 || grid[next_pos.pos_y][next_pos.pos_x] == BOX)
-			return (0);
+		if (grid[next_pos.y][next_pos.x] == WALL
+		 || grid[next_pos.y][next_pos.x] == BOX) // we cannot update if there is wall or another box
+			return (false);
 	}
-	return (1);
-}
- // BORRAR
-void	print_pos(Pos p)
-{
-	printf("----------- \nPOSITION = [%d][%d]\n -----------", p.pos_y, p.pos_x);
+	return (true);
 }
 
+/*
+ * @brief: Calculate the new position after a move
+ *
+ * @details: Given a current position and a move direction, returns the resulting position.
+ *
+ * @return: New position after applying the move
+ */
 Pos	new_position(Pos curr, Option o)
 {
 	Pos	p = curr;
-	print_pos(p);
+
 	switch (o)
 	{
 		case MOVE_DOWN:
-			p.pos_y++;
+			p.y++;
 			break;
 		case MOVE_UP:
-			p.pos_y--;
+			p.y--;
 			break;
 		case MOVE_RIGHT:
-			p.pos_x++;
+			p.x++;
 			break;
 		case MOVE_LEFT:
-			p.pos_x--;
+			p.x--;
 			break;
 		default:
 			break;
 	}
-	print_pos(p);
-	return p;
+	return (p);
 }
 
+/*
+ *  @brief: Update the game grid after a move
+ *
+ *  @details: Checks if the movement is valid, handles box movement if needed,
+ *  and updates the player's and box's positions on the grid.
+ */
 void update_grid(char grid[][MAX_COLUMNS], Option o, Pos pos)
 {
-	Pos		new = new_position(pos, o);
-	bool	box = (grid[new.pos_y][new.pos_x] == BOX
-				|| grid[new.pos_y][new.pos_x] == B_GOAL);
+    Pos     new = new_position(pos, o);
+    bool    box = (grid[new.y][new.x] == BOX
+                || grid[new.y][new.x] == B_GOAL);
+    Pos next = {0, 0};
 
-	if (!valid_move(grid, new, box, o))
-		return ;
+    // Return immediately if the move is invalid
+    if (!valid_move(grid, new, box, o))
+        return;
 
-	Pos		next;
-	if (box)
-		next = new_position(new, o);
+    if (box)
+        next = new_position(new, o);
 
-	char	curr = grid[pos.pos_y][pos.pos_x];
-	char	dest = grid[new.pos_y][new.pos_x];
+    char curr = grid[pos.y][pos.x]; // current player cell
+    char dest = grid[new.y][new.x]; // destination cell for player
 
-	if (box)
-	{
-		char	next_cell = grid[next.pos_y][next.pos_x];
-		grid[next.pos_y][next.pos_x] = change_cell(next_cell, true);
-		grid[new.pos_y][new.pos_x] = change_cell(dest, false);
-	}
-	else
-		grid[new.pos_y][new.pos_x] = change_cell(dest, false);
+    if (box)
+    {
+        char next_cell = grid[next.y][next.x]; // destination cell for the box
+        grid[next.y][next.x] = change_cell(next_cell, true); // move the box
+        grid[new.y][new.x] = change_cell(dest, false);       // move the player
+    }
+    else
+    {
+        grid[new.y][new.x] = change_cell(dest, false); // move the player
+    }
 
-	grid[pos.pos_y][pos.pos_x] = change_cell(curr, false);
+    grid[pos.y][pos.x] = change_cell(curr, false); // clear old player position
 }
 
+/*
+ * @brief: Find the player's position in the grid
+ *
+ * @details: Searches the entire grid for the player. If found, saves the
+ *          current position in the provided Pos pointer.
+*/
 bool	player_pos(State s, Pos *pos)
 {
 	for (int i = 0; i < s.rows; i++)
@@ -234,13 +266,13 @@ bool	player_pos(State s, Pos *pos)
 		{
 			if (s.grid[i][j] == PLAYER || s.grid[i][j] == P_GOAL)
 			{
-				pos->pos_y = i;
-				pos->pos_x = j;
-				return true;
+				pos->y = i;
+				pos->x = j;
+				return (true);
 			}
 		}
 	}
-	return false;
+	return (false);
 }
 
 /*
@@ -248,12 +280,12 @@ bool	player_pos(State s, Pos *pos)
 */
 State	move(State s, Option o)
 {
-	Pos pos;
+	Pos pos = {0, 0};
 
 	if (!player_pos(s, &pos)) // check if there is a player
 		return s; // in future maybe handle it
-	update_grid(s.grid, o, pos);
-	print_state(s);
+	update_grid(s.grid, o, pos); // apply the new move to the grid
+	print_state(s); // updates the map on screen
 	return	s;
 }
 

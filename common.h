@@ -13,6 +13,10 @@
 # define	RESUME_GAME	4
 # define	EXIT		5
 
+/*
+    constants that represents objects
+    makes the code more readable and intuitive
+*/
 # define PLAYER	'A'
 # define WALL	'#'
 # define BOX	'B'
