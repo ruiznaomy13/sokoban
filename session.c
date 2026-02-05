@@ -11,7 +11,7 @@ void restart_session_game(Session *session)
 // And it also initialise the current game by using init_game function
 void init_session(Session *session)
 {
-	for (int i=0; i < MAX_LEVELS; i++){
+	for (int i=1; i <= MAX_LEVELS; i++){
 		session->best_score[i] = 0; // setting best score to zero for all levels
 	}
 	restart_session_game(session);
@@ -28,15 +28,12 @@ void new_game_score(Session *session){
 	// Initialising two variables by current game score and lvl
 	int score = session->current_game.score;
 	int level = session->current_game.level;
-	if(score < 0){
-		return; // It won't do anyting if score is negative
+	if(score <= 0){
+		return; // not solved yet
 	}
-	if (score > 0){
-	// If the current is higher than the best score, it'll become the best score for the current game
-	if(session->best_score[level] == 0 || score > session->best_score[level]){
+	// If the best score is either zero or greater than the current score assign current score to best score
+	if(session->best_score[level] == 0 || session->best_score[level] > score){
 		session->best_score[level] = score;
 	}
-	}
-
 }
 /**** LAB 1 - functions to program (end here) ****/
