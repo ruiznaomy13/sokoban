@@ -14,4 +14,4 @@ void	resume_game(Session *session);
 void	print_menu();
 void	run(Session *session);
 
-#endif 
+#endif

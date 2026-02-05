@@ -198,7 +198,7 @@ Pos	new_position(Pos curr, Option o)
 	return p;
 }
 
-void update_grid(char grid[MAX_ROWS][MAX_COLUMNS], Option o, Pos pos)
+void update_grid(char grid[][MAX_COLUMNS], Option o, Pos pos)
 {
 	Pos		new = new_position(pos, o);
 	bool	box = (grid[new.pos_y][new.pos_x] == BOX
@@ -228,9 +228,9 @@ void update_grid(char grid[MAX_ROWS][MAX_COLUMNS], Option o, Pos pos)
 
 bool	player_pos(State s, Pos *pos)
 {
-	for (size_t i = 0; i < s.rows; i++)
+	for (int i = 0; i < s.rows; i++)
 	{
-		for (size_t j = 0; j < s.columns; j++)
+		for (int j = 0; j < s.columns; j++)
 		{
 			if (s.grid[i][j] == PLAYER || s.grid[i][j] == P_GOAL)
 			{
@@ -250,9 +250,8 @@ State	move(State s, Option o)
 {
 	Pos pos;
 
-	if (!player_pos(s, &pos)) // check if there is a player 
+	if (!player_pos(s, &pos)) // check if there is a player
 		return s; // in future maybe handle it
-
 	update_grid(s.grid, o, pos);
 	print_state(s);
 	return	s;

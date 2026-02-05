@@ -1,5 +1,6 @@
 #ifndef COMMON_H
 # define COMMON_H
+
 # include	<stdio.h>
 # include	<stdlib.h>
 # include	<stdbool.h>
@@ -21,5 +22,4 @@
 # define EMPTY	'.'
 
 # define	MAX_STR_LENGTH	50
-
 #endif

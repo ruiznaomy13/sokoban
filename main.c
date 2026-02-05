@@ -14,7 +14,7 @@ void run_game(Session *session)
 			printf("[INFO] Enter a game option [%d-%d]: ", MOVE_UP, QUIT_GAME);
 			game_option = read_int();
 		} while(!is_valid_option(game_option));
-		
+
 		switch(game_option)
 		{
 			case	MOVE_UP:
@@ -46,17 +46,17 @@ void new_game(Session *session)
 
 void save_game(Session *session)
 {
-	// ToDo in Lab 2
+    (void)session; // ToDo in Lab 2
 }
 
 void load_game(Session *session)
 {
-	// ToDo in Lab 2
+    (void)session; // ToDo in Lab 2
 }
 
 void resume_game(Session *session)
 {
-	// ToDo in Lab 2
+    (void)session; // ToDo in Lab 2
 }
 
 void print_menu()
@@ -101,7 +101,7 @@ void run(Session *session)
 	} while(option != EXIT);
 }
 
-int main(void)
+int	main(void)
 {
 	Session	session;
 

@@ -1,5 +1,6 @@
 #ifndef UTILS_H
 # define UTILS_H
+
 # include "common.h"
 
 int		read_int();
