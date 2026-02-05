@@ -6,6 +6,7 @@ void run_game(Session *session)
 
 	do {
 		print_session(session);
+		print_state(session->current_game.state);
 
 		Option	game_option;
 		do {
@@ -40,7 +41,6 @@ void run_game(Session *session)
 void new_game(Session *session)
 {
 	restart_session_game(session);
-	choose_level(&(session->current_game));
 	run_game(session);
 }
 
@@ -72,7 +72,8 @@ void print_menu()
 
 void run(Session *session)
 {
-	int option;
+	int	option;
+
 	do {
 		print_menu();
 		do {

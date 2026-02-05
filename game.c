@@ -110,8 +110,8 @@ bool	is_terminal(State s)
 	for(int i= 0; i< s.rows; i++){
 		for(int j= 0; j < s.columns; j++)
 		{
-			if(s.grid[i][j] == B_GOAL)
-				return true;
+			if(s.grid[i][j] == BOX)
+				return false;
 		}
 	}
 	return true;
@@ -133,7 +133,7 @@ char	change_cell(char c, bool box)
 		case P_GOAL:
 			return GOAL;
 		case B_GOAL:
-			return PLAYER;
+			return P_GOAL;
 		default:
 			return c;
 	}
@@ -167,11 +167,16 @@ bool	valid_move(char (*grid)[MAX_COLUMNS], Pos new_pos, bool box, Option o)
 	}
 	return (1);
 }
+ // BORRAR
+void	print_pos(Pos p)
+{
+	printf("----------- \nPOSITION = [%d][%d]\n -----------", p.pos_y, p.pos_x);
+}
 
 Pos	new_position(Pos curr, Option o)
 {
 	Pos	p = curr;
-
+	print_pos(p);
 	switch (o)
 	{
 		case MOVE_DOWN:
@@ -189,70 +194,53 @@ Pos	new_position(Pos curr, Option o)
 		default:
 			break;
 	}
+	print_pos(p);
 	return p;
 }
 
 void update_grid(char grid[MAX_ROWS][MAX_COLUMNS], Option o, Pos pos)
 {
 	Pos		new = new_position(pos, o);
-	Pos		next = new_position(new, o);
-	bool	box = false;
-	
-	if (grid[new.pos_y][new.pos_x] == BOX) box = true;
-	if (!valid_move(grid, new, box, o)) return ;
+	bool	box = (grid[new.pos_y][new.pos_x] == BOX
+				|| grid[new.pos_y][new.pos_x] == B_GOAL);
 
-	char	tmp = grid[pos.pos_y][pos.pos_x];
+	if (!valid_move(grid, new, box, o))
+		return ;
 
-	grid[pos.pos_y][pos.pos_x] = change_cell(tmp, box);
+	Pos		next;
+	if (box)
+		next = new_position(new, o);
+
+	char	curr = grid[pos.pos_y][pos.pos_x];
+	char	dest = grid[new.pos_y][new.pos_x];
+
 	if (box)
 	{
-		char tmp2 = grid[new.pos_y][new.pos_x];
-		grid[new.pos_y][new.pos_x] = change_cell(tmp, box);
-		grid[next.pos_y][next.pos_x] = change_cell(tmp2, box);
-	} else
-		grid[new.pos_y][new.pos_x] = change_cell(tmp, box);
+		char	next_cell = grid[next.pos_y][next.pos_x];
+		grid[next.pos_y][next.pos_x] = change_cell(next_cell, true);
+		grid[new.pos_y][new.pos_x] = change_cell(dest, false);
+	}
+	else
+		grid[new.pos_y][new.pos_x] = change_cell(dest, false);
+
+	grid[pos.pos_y][pos.pos_x] = change_cell(curr, false);
 }
 
-// void update_grid(char grid[MAX_ROWS][MAX_COLUMNS], Option o, Pos pos)
-// {
-// 	Pos		new = new_position(pos, o);
-// 	bool	box = (grid[new.pos_y][new.pos_x] == BOX);
-
-// 	if (!valid_move(grid, new, box, o))
-// 		return ;
-
-// 	Pos		next;
-// 	if (box)
-// 		next = new_position(new, o);
-
-// 	char	curr = grid[pos.pos_y][pos.pos_x];
-// 	char	dest = grid[new.pos_y][new.pos_x];
-
-// 	if (box)
-// 	{
-// 		char	next_cell = grid[next.pos_y][next.pos_x];
-// 		grid[next.pos_y][next.pos_x] = change_cell(next_cell, true);
-// 		grid[new.pos_y][new.pos_x] = change_cell(dest, false);
-// 	}
-// 	else
-// 		grid[new.pos_y][new.pos_x] = change_cell(dest, false);
-
-// 	grid[pos.pos_y][pos.pos_x] = change_cell(curr, false);
-// }
-
-void	player_pos(Pos *pos, State s)
+bool	player_pos(State s, Pos *pos)
 {
 	for (size_t i = 0; i < s.rows; i++)
 	{
 		for (size_t j = 0; j < s.columns; j++)
 		{
-			if (s.grid[i][j] == PLAYER)
+			if (s.grid[i][j] == PLAYER || s.grid[i][j] == P_GOAL)
 			{
 				pos->pos_y = i;
 				pos->pos_x = j;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 /*
@@ -260,12 +248,16 @@ void	player_pos(Pos *pos, State s)
 */
 State	move(State s, Option o)
 {
-	Pos	pos;
+	Pos pos;
 
-	player_pos(&pos, s);
+	if (!player_pos(s, &pos)) // check if there is a player 
+		return s; // in future maybe handle it
+
 	update_grid(s.grid, o, pos);
-	return s;
+	print_state(s);
+	return	s;
 }
+
 
 /**** LAB 1 - functions to program (end here) ****/
 

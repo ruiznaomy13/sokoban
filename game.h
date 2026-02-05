@@ -49,7 +49,7 @@ void	choose_level(Game *g);
 
 /**** LAB 1 - functions to program (start here) ****/
 // AUXILIAR FUNCTIONS
-void	player_pos(Pos *pos, State s); // look for the player position
+bool	player_pos(State s, Pos *pos); // look for the player position
 void	update_grid(char (*grid)[MAX_COLUMNS], Option o, Pos pos); //change the grid to new one
 Pos		new_position(Pos curr, Option o); // return the new position BOX or Pos
 bool	valid_move(char (*grid)[MAX_COLUMNS], Pos new_pos, bool box, Option o); // True if the move is valid
