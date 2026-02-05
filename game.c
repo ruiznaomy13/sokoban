@@ -110,13 +110,8 @@ bool	is_terminal(State s)
 	for(int i= 0; i< s.rows; i++){
 		for(int j= 0; j < s.columns; j++)
 		{
-<<<<<<< HEAD
 			if(s.grid[i][j] == B_GOAL)
 				return true;
-=======
-			if(s.grid[i][j] == GOAL)
-				return false;
->>>>>>> dfe2c930312129b25749ea62b0a590d6b6456d1d
 		}
 	}
 	return true;
