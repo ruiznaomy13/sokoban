@@ -10,7 +10,7 @@ typedef struct
 {
     int		best_score[MAX_LEVELS+1];
     Game	current_game; // LAB 1
-}		Session;
+}           Session;
 
 // LAB 1 - functions 
 void	restart_session_game(Session *s); // Lab 2 - refactor

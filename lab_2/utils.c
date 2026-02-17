@@ -3,19 +3,22 @@
 int read_int()
 {
   int res, val;
+  
   do
   {
-	res = scanf("%d", &val);
+    res = scanf("%d", &val);
   } while (res != 1);
+
   return val;
 }
 
-void read_filename(char *filename)
+void  read_filename(char *filename)
 {
   int res;
+  
   do
   {
-	res = scanf("%s", filename);
+	  res = scanf("%s", filename);
   } while (res != 1);
 }
 
