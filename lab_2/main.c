@@ -2,42 +2,42 @@
 
 void	run_game(Session *session)
 {
-  Game	*game = &session->current_game;
+	Game	*game = &session->current_game;
 
-  do
-  {
-	print_session(session);
-
-	Option game_option;
 	do
 	{
-	  print_options();
-	  printf("[INFO] Enter a game option [%d-%d]: ", MOVE_UP, QUIT_GAME);
-	  game_option = read_int();
-	} while (!is_valid_option(game_option));
+		print_session(session);
 
-	switch (game_option)
-	{
-	case MOVE_UP:
-	case MOVE_RIGHT:
-	case MOVE_DOWN:
-	case MOVE_LEFT:
-	  game->state = move(game->state, game_option);
-	  game->score++;
-	  break;
-	case SHOW_BEST_MOVE:
-	  // ToDo in Lab 3
-	  break;
-	case QUIT_GAME:
-	  printf("[INFO] QUIT GAME!\n");
-	  return;
-	}
+		Option game_option;
+		do
+		{
+			print_options();
+			printf("[INFO] Enter a game option [%d-%d]: ", MOVE_UP, QUIT_GAME);
+			game_option = read_int();
+		} while (!is_valid_option(game_option));
 
-  } while (!is_terminal(game->state));
+		switch (game_option)
+		{
+			case MOVE_UP:
+			case MOVE_RIGHT:
+			case MOVE_DOWN:
+			case MOVE_LEFT:
+				game->state = move(game->state, game_option);
+				game->score++;
+				break;
+			case SHOW_BEST_MOVE:
+			// ToDo in Lab 3
+			break;
+			case QUIT_GAME:
+			printf("[INFO] QUIT GAME!\n");
+			return;
+		}
 
-  new_game_score(session);
-  print_session(session);
-  printf("[INFO] LEVEL COMPLETED!!!\n");
+	} while (!is_terminal(game->state));
+
+	new_game_score(session);
+	print_session(session);
+	printf("[INFO] LEVEL COMPLETED!!!\n");
 }
 
 void	new_game(Session *session)
