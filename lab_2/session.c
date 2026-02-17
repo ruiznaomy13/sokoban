@@ -38,3 +38,9 @@ void	new_game_score(Session *session)
 		session->best_score[level] = score;
 }
 /**** LAB 1 - functions to program (end here) ****/
+
+// LAB 2 - functions
+void free_session(Session *s)
+{
+  // ToDo - Lab 2
+}
