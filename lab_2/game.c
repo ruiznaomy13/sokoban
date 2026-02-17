@@ -262,7 +262,11 @@ char	**free_grid(char **grid)
 
 char **make_grid(int rows, int columns)
 {
-	// ToDo - Lab 2
+	/*
+		This function allows that our grid have any size
+		allocates memory for each row and each colum space
+		also we make sure to protect each calloc
+	*/
 	char	**grid = calloc(rows + 1, sizeof(char *));
 
 	if (!grid)
