@@ -1,5 +1,4 @@
 #include "session.h"
-
 /**** LAB 1 - functions to program (start here) ****/
 // using init_game and choose_level from session.h to restart the session
 void	restart_session_game(Session *session)
@@ -42,5 +41,7 @@ void	new_game_score(Session *session)
 // LAB 2 - functions
 void free_session(Session *s)
 {
-  // ToDo - Lab 2
+	// CHECK IT
+	free(s->best_score);
+	free_game(s->game);
 }

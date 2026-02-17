@@ -42,74 +42,87 @@ void	run_game(Session *session)
 
 void	new_game(Session *session)
 {
-  restart_session_game(session);
-  choose_level(&(session->current_game));
-  run_game(session);
+	restart_session_game(session);
+	choose_level(&(session->current_game));
+	run_game(session);
 }
 
 void	save_game(Session *session)
 {
-  // ToDo - Lab 2
+	// ToDo - Lab 2
 }
 
 void	load_game(Session *session)
 {
-  // ToDo - Lab 2
+	// ToDo - Lab 2
 }
 
 void	resume_game(Session *session)
 {
-  // ToDo - Lab 2
+	/*
+		resume the game that has been initialized
+		check if there is a current game
+		an then the run the game
+	*/
+	if (session->current_game.state.grid == NULL)
+	{
+		printf("[ANY GAME STARTED]\n");
+		return ;
+	}
+
+	printf("RESUMING GAME ... \n");
+	run_game(session);
 }
 
 void	 print_menu()
 {
-  printf("[INFO] Menu options:\n");
-  printf("\t1. New game.\n");	 // LAB1 - basic lab for creating grid and moves
-  printf("\t2. Save game.\n");	 // LAB2 - Writing file
-  printf("\t3. Load game.\n");	 // LAB2 - Reading file
-  printf("\t4. Resume game.\n"); // LAB2 - Continue game after reading file
-  printf("\t5. Exit.\n");		 // Free all reserved memory!
+	printf("[INFO] Menu options:\n");
+	printf("\t1. New game.\n");	 // LAB1 - basic lab for creating grid and moves
+	printf("\t2. Save game.\n");	 // LAB2 - Writing file
+	printf("\t3. Load game.\n");	 // LAB2 - Reading file
+	printf("\t4. Resume game.\n"); // LAB2 - Continue game after reading file
+	printf("\t5. Exit.\n");		 // Free all reserved memory!
 }
 
 void	run(Session *session)
 {
-  int option;
-  do
-  {
-	print_menu();
+	int	option;
 	do
 	{
-	  printf("[INFO] Enter an integer [%d-%d]: ", NEW_GAME, EXIT);
-	  option = read_int();
-	} while (option < NEW_GAME || option > EXIT);
+		print_menu();
+		do
+		{
+			printf("[INFO] Enter an integer [%d-%d]: ", NEW_GAME, EXIT);
+			option = read_int();
+		} while (option < NEW_GAME || option > EXIT);
 
-	switch (option)
-	{
-	case NEW_GAME:
-	  new_game(session);
-	  break;
-	case SAVE_GAME:
-	  save_game(session);
-	  break;
-	case LOAD_GAME:
-	  load_game(session);
-	  break;
-	case RESUME_GAME:
-	  resume_game(session);
-	  break;
-	case EXIT:
-	  break;
-	}
-  } while (option != EXIT);
+		switch (option)
+		{
+			case NEW_GAME:
+				new_game(session);
+				break;
+			case SAVE_GAME:
+				save_game(session);
+				break;
+			case LOAD_GAME:
+				load_game(session);
+				break;
+			case RESUME_GAME:
+				resume_game(session);
+				break;
+			case EXIT:
+				break;
+		}
+	} while (option != EXIT);
 
-  // Lab 2
-  free_session(session);
+	// Lab 2
+	free_session(session);
 }
 
 int	main()
 {
-  Session session;
-  init_session(&session);
-  run(&session);
+	Session	session;
+
+	init_session(&session);
+	run(&session);
 }

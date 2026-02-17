@@ -13,6 +13,17 @@
 #define RESUME_GAME 4
 #define EXIT 5
 
-#define MAX_STR_LENGTH 50
+/*
+    constants that represents objects
+    makes the code more readable and intuitive
+*/
+#define PLAYER	'A'
+#define WALL	'#'
+#define BOX	'B'
+#define GOAL	'G'
+#define P_GOAL	'Y'
+#define B_GOAL	'X'
+#define EMPTY	'.'
 
+#define MAX_STR_LENGTH 50
 #endif

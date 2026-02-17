@@ -247,9 +247,36 @@ void free_game(Game *g)
 	// ToDo - Lab 2
 }
 
+// free **char
+char	**free_grid(char **grid)
+{
+	int	i = -1;
+
+	if (!grid)
+		return NULL;
+	while (grid[++i])
+		free(grid[i]);
+	free(grid);
+	return NULL;
+}
+
 char **make_grid(int rows, int columns)
 {
 	// ToDo - Lab 2
-	return NULL;
+	char	**grid = calloc(rows + 1, sizeof(char *));
+
+	if (!grid)
+		return (NULL);
+
+	for (int i=0; i < rows; ++i)
+	{
+		grid[i] = calloc(columns, sizeof(char));
+		
+		if (!grid[i])
+			return (free_grid(grid));
+	}
+	grid[rows] = NULL;
+
+	return grid;
 }
 /**** LAB 2 - functions to program (end here) ****/

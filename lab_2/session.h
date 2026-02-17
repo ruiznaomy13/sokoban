@@ -6,9 +6,10 @@
 #define MAX_LEVELS 4
 
 /// LAB 1 - data structure
-typedef struct{
-    int best_score[MAX_LEVELS+1];
-    Game current_game; // LAB 1
+typedef struct
+{
+    int     best_score[MAX_LEVELS+1];
+    Game    current_game; // LAB 1
 } Session;
 
 // LAB 1 - functions 
