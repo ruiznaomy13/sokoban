@@ -104,8 +104,6 @@ void	choose_level(Game *game)
 /**** LAB 1 - functions to program (start here) ****/
 void print_state(State s)
 {
-	printf("LLEGO ACA\n");
-	print_grid(s.grid);
 	for(int i = 0; i < s.rows; i++)
 	{
 		for(int j = 0; j < s.columns; j++)

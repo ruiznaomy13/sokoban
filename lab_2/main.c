@@ -10,6 +10,7 @@ void	run_game(Session *session)
 		print_state(session->current_game.state);
 
 		Option game_option;
+
 		do
 		{
 			print_options();
@@ -44,8 +45,6 @@ void	run_game(Session *session)
 void	new_game(Session *session)
 {
 	restart_session_game(session);
-	choose_level(&(session->current_game));
-	print_grid(session->current_game.state.grid);
 	run_game(session);
 }
 
@@ -156,11 +155,11 @@ void	resume_game(Session *session)
 	*/
 	if (session->current_game.state.grid == NULL)
 	{
-		printf("[ANY GAME STARTED]\n");
+		printf("\t[ANY GAME STARTED]\n");
 		return ;
 	}
 
-	printf("RESUMING GAME ... \n");
+	printf("\tRESUMING GAME ... \n");
 	run_game(session);
 }
 
@@ -177,6 +176,7 @@ void	 print_menu()
 void	run(Session *session)
 {
 	int	option;
+
 	do
 	{
 		print_menu();

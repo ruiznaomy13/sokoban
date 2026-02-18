@@ -13,9 +13,8 @@ void	restart_session_game(Session *session)
 void	init_session(Session *session)
 {
 	// TODO
-	for (int i=0; i <= MAX_LEVELS; i++){
+	for (int i=0; i <= MAX_LEVELS; i++)
 		session->best_score[i] = 0;
-	}
 	init_game(&session->current_game);
 }
 
