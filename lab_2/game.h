@@ -57,14 +57,13 @@ State   move(State b, Option o); // move/push in one of the 4 cardinal direction
 /**** LAB 1 - functions to program (end here) ****/
 
 
-
 /**** LAB 2 - functions to program (start here) ****/
 void    free_state(State *s);
 void    free_game(Game *g);
 char    **make_grid(int rows, int columns);
 
 //aux functions
-void    free_grid(char **grid);
+char    **free_grid(char **grid);
 /**** LAB 2 - functions to program (end here) ****/
 
 

@@ -7,6 +7,7 @@ void	run_game(Session *session)
 	do
 	{
 		print_session(session);
+		print_state(session->current_game.state);
 
 		Option game_option;
 		do
@@ -44,6 +45,7 @@ void	new_game(Session *session)
 {
 	restart_session_game(session);
 	choose_level(&(session->current_game));
+	print_grid(session->current_game.state.grid);
 	run_game(session);
 }
 
@@ -54,12 +56,13 @@ void	save_game(Session *session)
 	FILE *fp;
 	Game *g = &session->current_game;
 	printf("Enter filename to save: ");
-	if(fgets(saved_game_file, sizeof(saved_game_file), stdin) == NULL){
-		return;
-	}
+	if(fgets(saved_game_file, sizeof(saved_game_file), stdin) == NULL)
+		return ;	
 	// remove the new line 
-	for(int i= 0; saved_game_file[i]!=0; i++){
-		if(saved_game_file[i] == '\n'){
+	for(int i= 0; saved_game_file[i]!=0; i++)
+	{
+		if(saved_game_file[i] == '\n')
+		{
 			saved_game_file[i] = '\0';
 			break;
 		}
@@ -67,7 +70,8 @@ void	save_game(Session *session)
 	// opening the file in write mode 
 	fp = fopen(saved_game_file, "w");
 	// if the file doesn't exist it shows an error message
-	if(fp == NULL){
+	if(fp == NULL)
+	{
 		printf("Error opening file fo writing.\n");
 		return;
 	}
@@ -77,8 +81,10 @@ void	save_game(Session *session)
 	fprintf(fp, "\nState:");
 	fprintf(fp, "\nrows: %d", g->state.rows);
 	fprintf(fp, "\ncolumns: %d\n", g->state.columns);
-	for(int i = 0; i < g->state.rows; i++){
-		for(int j= 0; j < g->state.columns; j++){
+	for(int i = 0; i < g->state.rows; i++)
+	{
+		for(int j= 0; j < g->state.columns; j++)
+		{
 			fputc(g->state.grid[i][j], fp);
 			fputc('\n',fp);
 		}
@@ -109,7 +115,8 @@ void	load_game(Session *session)
 	
 	file = fopen(filename, "r");
 	// if the file doesn't exist it shows an error message
-	if(file == NULL){
+	if(file == NULL)
+	{
 		printf("Error opening file fo writing.\n");
 		return;
 	}

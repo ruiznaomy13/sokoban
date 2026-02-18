@@ -1,4 +1,12 @@
 #include "utils.h"
+// BORRAR
+void  print_grid(char **str)
+{
+  int i = -1;
+
+  while (str[++i])
+    printf("row %d: [%s]\n", i, str[i]); 
+}
 
 int read_int()
 {
