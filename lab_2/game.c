@@ -250,9 +250,12 @@ void free_game(Game *g)
 	// ToDo - Lab 2
 }
 
-// free **char
 char	**free_grid(char **grid)
 {
+	/*
+		free the memmory of a char**
+		it nust be finished with NULL
+	*/
 	int	i = -1;
 
 	if (!grid)

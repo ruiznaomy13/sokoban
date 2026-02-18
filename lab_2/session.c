@@ -41,5 +41,11 @@ void	new_game_score(Session *session)
 // LAB 2 - functions
 void free_session(Session *s)
 {
+	/*
+		checks if there is a session, if not returrns and don't do nothing
+		otherwise free the game memmory
+	*/
+	if (!s)
+		return ;
 	free_game(&s->current_game);
 }
