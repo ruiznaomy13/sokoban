@@ -242,12 +242,19 @@ State	move(State s, Option o)
 /**** LAB 2 - functions to program (start here) ****/
 void free_state(State *s)
 {
-	// ToDo - Lab 2
+	if(s->grid!=NULL){
+		free(s->grid);
+        s->grid=NULL;
+	}
+	s->columns=0;
+    s->rows=0;
 }
 
 void free_game(Game *g)
 {
-	// ToDo - Lab 2
+	g->level=0;
+    g->score=0;
+    free_state(&(g->state));
 }
 
 char	**free_grid(char **grid)

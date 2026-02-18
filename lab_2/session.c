@@ -3,7 +3,7 @@
 // using init_game and choose_level from session.h to restart the session
 void	restart_session_game(Session *session)
 {
-		free_game(&session->current_game);
+	free_game(&session->current_game);
 	init_game(&session->current_game);
 	choose_level(&session->current_game);
 }

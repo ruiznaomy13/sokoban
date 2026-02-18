@@ -86,9 +86,58 @@ void	save_game(Session *session)
 	fclose(fp);
 	printf("Game saved successfully.\n");
 }
+
 void	load_game(Session *session)
 {
-	// ToDo - Lab 2
+	char filename[256];
+	FILE *file;
+    //Initialising new variables to store data
+    int score, level, rows, columns;
+	Game *g = &session->current_game;
+
+	printf("Enter filename to load: ");
+	if(fgets(filename,  sizeof(filename), stdin) == NULL){
+		return;
+	}
+	for (int i = 0; filename[i]!= '\0'; i++)
+	{
+		if(filename[i] == '\n'){
+			filename[i] = '\0';
+			break;
+		}
+	}
+	
+	file = fopen(filename, "r");
+	// if the file doesn't exist it shows an error message
+	if(file == NULL){
+		printf("Error opening file fo writing.\n");
+		return;
+	}
+	// free previous game
+	free_session(session);
+
+    fscanf(file, "Score: %d\n", &score);
+    fscanf(file, "Level: %d\n", &level);
+	fscanf(file, "State:\n");
+    fscanf(file, "rows: %d\n", &rows);
+    fscanf(file, "columns: %d\n", &columns);
+    //Retreave the values of the game.
+    g->score=score;
+    g->level=level;
+    g->state.rows=rows;
+    g->state.columns=columns;
+	// Allocate grid dynamically
+	g->state.grid =make_grid(rows, columns);
+
+    //Read grid
+    for(int i=0; i<rows;++i){
+        for(int j=0; j<columns; ++j){
+            fscanf(file, "%c", g->state.grid[i][j]);
+        }
+		fscanf(file, "\n"); // new line after each row
+    }
+	fclose(file);
+	printf("Game loaded successfully.\n");
 }
 
 void	resume_game(Session *session)
