@@ -49,9 +49,21 @@ void	new_game(Session *session)
 
 void	save_game(Session *session)
 {
-	// ToDo - Lab 2
-}
+	char saved_game_file[256];
+	FILE *fp;
+	Game *g = &session->current_game;
 
+	if(fgets(saved_game_file, sizeof(saved_game_file), stdin) == NULL){
+		return;
+	}
+	// using strcspn to remove the new line 
+	saved_game_file[strcspn(saved_game_file, "\n")] = 0;
+	fp = fopen(saved_game_file, "w");
+	fprintf("Score: ", &session->current_game.score);
+	fprintf("\nLevel: ", &session->current_game.level);
+	fprintf("\nState: ", &session->current_game.state);
+	
+}
 void	load_game(Session *session)
 {
 	// ToDo - Lab 2

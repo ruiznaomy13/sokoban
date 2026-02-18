@@ -3,6 +3,7 @@
 // using init_game and choose_level from session.h to restart the session
 void	restart_session_game(Session *session)
 {
+		free_game(&session->current_game);
 	init_game(&session->current_game);
 	choose_level(&session->current_game);
 }
@@ -12,8 +13,9 @@ void	restart_session_game(Session *session)
 void	init_session(Session *session)
 {
 	// TODO
-	for (int i=0; i <= MAX_LEVELS; i++)
+	for (int i=0; i <= MAX_LEVELS; i++){
 		session->best_score[i] = 0;
+	}
 	init_game(&session->current_game);
 }
 
