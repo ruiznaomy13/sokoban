@@ -118,7 +118,8 @@ void print_game(Game game)
 
 bool is_terminal(State s)
 {
-	for(int i= 0; i< s.rows; i++){
+	for(int i= 0; i< s.rows; i++)
+	{
 		for(int j= 0; j < s.columns; j++)
 		{
 			if(s.grid[i][j] == BOX)
@@ -165,12 +166,12 @@ Pos	new_position(Pos curr, Option o)
  *  @details: Checks if the movement is valid, handles box movement if needed,
  *  and updates the player's and box's positions on the grid.
  */
-void update_grid(char grid[][MAX_COLUMNS], Option o, Pos pos)
+void	update_grid(char **grid, Option o, Pos pos)
 {
     Pos     new = new_position(pos, o);
     bool    box = (grid[new.y][new.x] == BOX
                 || grid[new.y][new.x] == B_GOAL);
-    Pos next = {0, 0};
+    Pos     next = {0, 0};
 
     // Return immediately if the move is invalid
     if (!valid_move(grid, new, box, o))
@@ -179,18 +180,18 @@ void update_grid(char grid[][MAX_COLUMNS], Option o, Pos pos)
     if (box)
         next = new_position(new, o);
 
-    char curr = grid[pos.y][pos.x]; // current player cell
-    char dest = grid[new.y][new.x]; // destination cell for player
+    char curr = grid[pos.y][pos.x];     // current player cell
+    char dest = grid[new.y][new.x];     // destination cell for player
 
     if (box)
     {
         char next_cell = grid[next.y][next.x]; // destination cell for the box
-        grid[next.y][next.x] = change_cell(next_cell, true); // move the box
-        grid[new.y][new.x] = change_cell(dest, false);       // move the player
+        grid[next.y][next.x] = change_cell(next_cell, true);  // move the box
+        grid[new.y][new.x] = change_cell(dest, false);        // move the player
     }
     else
     {
-        grid[new.y][new.x] = change_cell(dest, false); // move the player
+        grid[new.y][new.x] = change_cell(dest, false);        // move the player
     }
 
     grid[pos.y][pos.x] = change_cell(curr, false); // clear old player position
@@ -228,8 +229,10 @@ State	move(State s, Option o)
 
 	if (!player_pos(s, &pos)) // check if there is a player
 		return s; // in future maybe handle it
+
 	update_grid(s.grid, o, pos); // apply the new move to the grid
 	print_state(s); // updates the map on screen
+
 	return	s;
 }
 
@@ -269,7 +272,7 @@ char **make_grid(int rows, int columns)
 	*/
 	char	**grid = calloc(rows + 1, sizeof(char *));
 
-	if (!grid)
+	if (!grid || (rows < 0 || columns < 0))
 		return (NULL);
 
 	for (int i=0; i < rows; ++i)
@@ -283,4 +286,5 @@ char **make_grid(int rows, int columns)
 
 	return grid;
 }
+
 /**** LAB 2 - functions to program (end here) ****/
