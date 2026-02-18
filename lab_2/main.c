@@ -49,20 +49,42 @@ void	new_game(Session *session)
 
 void	save_game(Session *session)
 {
+	// Creating a new file here
 	char saved_game_file[256];
 	FILE *fp;
 	Game *g = &session->current_game;
-
+	printf("Enter filename to save: ");
 	if(fgets(saved_game_file, sizeof(saved_game_file), stdin) == NULL){
 		return;
 	}
-	// using strcspn to remove the new line 
-	saved_game_file[strcspn(saved_game_file, "\n")] = 0;
+	// remove the new line 
+	for(int i= 0; saved_game_file[i]!=0; i++){
+		if(saved_game_file[i] == '\n'){
+			saved_game_file[i] = '\0';
+			break;
+		}
+	}
+	// opening the file in write mode 
 	fp = fopen(saved_game_file, "w");
-	fprintf("Score: ", &session->current_game.score);
-	fprintf("\nLevel: ", &session->current_game.level);
-	fprintf("\nState: ", &session->current_game.state);
-	
+	// if the file doesn't exist it shows an error message
+	if(fp == NULL){
+		printf("Error opening file fo writing.\n");
+		return;
+	}
+	// The structure in which the info will be saved in the file
+	fprintf(fp, "Score: %d", g->score);
+	fprintf(fp, "\nLevel: %d", g->level);
+	fprintf(fp, "\nState:");
+	fprintf(fp, "\nrows: %d", g->state.rows);
+	fprintf(fp, "\ncolumns: %d\n", g->state.columns);
+	for(int i = 0; i < g->state.rows; i++){
+		for(int j= 0; j < g->state.columns; j++){
+			fputc(g->state.grid[i][j], fp);
+			fputc('\n',fp);
+		}
+	}
+	fclose(fp);
+	printf("Game saved successfully.\n");
 }
 void	load_game(Session *session)
 {
