@@ -47,16 +47,16 @@ void	new_game(Session *session)
 	restart_session_game(session);
 	run_game(session);
 }
-/*
- *  @brief: Save the current game in a file
- *
- *  @details: This function asks the user to enter a filename where the user want to store the current game,
- *  it stores the current game in the same format as it's supposed to be loaded in. The file is saved in the
- *  same folder the user is working in othewise user can specify the specific path and it'll be stored there.
- * 
- */
 
 void	save_game(Session *session)
+/*
+*  @brief: Save the current game in a file
+*
+*  @details: This function asks the user to enter a filename where the user want to store the current game,
+*  it stores the current game in the same format as it's supposed to be loaded in. The file is saved in the
+*  same folder the user is working in othewise user can specify the specific path and it'll be stored there.
+* 
+*/
 {
 	// Creating a new file here
 	char saved_game_file[256];
@@ -101,20 +101,21 @@ void	save_game(Session *session)
 	fclose(fp);
 	printf("Game saved successfully.\n");
 }
-/*
- *  @brief: Load the current game from a file
- *
- *  @details: This function allows the user to load the game from thee file user wants. First,
- *  it asks the user for the name of the file, and loads it. User has to choose the option resume game to play it.
- *  It follows the same structure in scanf as of save_game for the retrieval of data.
- * 
- */
+
 void	load_game(Session *session)
+/*
+*  @brief: Load the current game from a file
+*
+*  @details: This function allows the user to load the game from thee file user wants. First,
+*  it asks the user for the name of the file, and loads it. User has to choose the option resume game to play it.
+*  It follows the same structure in scanf as of save_game for the retrieval of data.
+* 
+*/
 {
 	char	filename[256];
 	FILE	*file;
-    //Initialising new variables to store data
-    int		score, level, rows, columns;
+	//Initialising new variables to store data
+	int		score, level, rows, columns;
 	Game	*g = &session->current_game;
 	int		c;
 
@@ -141,43 +142,51 @@ void	load_game(Session *session)
 		printf("Error opening file fo writing.\n");
 		return;
 	}
-	// free previous game
+
+	if (!is_valid(file))
+	{
+		printf("Invalid file format.\n");
+		fclose(file);
+		return;
+	}
+
 	free_session(session);
 
-    fscanf(file, "Score: %d\n", &score);
-    fscanf(file, "Level: %d\n", &level);
+	// free previous game
+	fscanf(file, "Score: %d\n", &score);
+	fscanf(file, "Level: %d\n", &level);
 	fscanf(file, "State:\n");
-    fscanf(file, "rows: %d\n", &rows);
-    fscanf(file, "columns: %d\n", &columns);
+	fscanf(file, "rows: %d\n", &rows);
+	fscanf(file, "columns: %d\n", &columns);
 
-    //Retreave the values of the game.
-    g->score=score;
-    g->level=level;
-    g->state.rows=rows;
-    g->state.columns=columns;
+	//Retreave the values of the game.
+	g->score = score;
+	g->level = level;
+	g->state.rows = rows;
+	g->state.columns = columns;
 	
 	// Allocate grid dynamically
 	g->state.grid =make_grid(rows, columns);
 
-    //Read grid
-    for(int i=0; i<rows;++i)
+	//Read grid
+	for(int i=0; i<rows;++i)
 	{
-        for(int j=0; j<columns; ++j)
-            fscanf(file, "%c", &g->state.grid[i][j]);
+		for(int j=0; j<columns; ++j)
+			fscanf(file, "%c", &g->state.grid[i][j]);
 		fscanf(file, "\n"); // new line after each row
-    }
+	}
 
 	fclose(file);
 	printf("Game loaded successfully.\n");
 }
 
 void	resume_game(Session *session)
+/*
+	resume the game that has been initialized
+	check if there is a current game
+	an then the run the game
+*/
 {
-	/*
-		resume the game that has been initialized
-		check if there is a current game
-		an then the run the game
-	*/
 	if (session->current_game.state.grid == NULL)
 	{
 		printf("\t[ANY GAME STARTED]\n");

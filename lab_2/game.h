@@ -54,6 +54,15 @@ void    print_state(State s);
 void    print_game(Game g);
 bool    is_terminal(State s); // True if all boxes are in goal locations, otherwise false
 State   move(State b, Option o); // move/push in one of the 4 cardinal directions
+
+// aux functions
+bool    in_bounds(State s, Pos p);
+Pos     new_position(Pos curr, Option o);
+bool	player_pos(State s, Pos *pos);
+char	change_cell(char c, bool box);
+void	update_grid(State s, Option o, Pos pos);
+bool	valid_move(State s, Pos new_pos, bool box, Option o);
+
 /**** LAB 1 - functions to program (end here) ****/
 
 

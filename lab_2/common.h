@@ -19,7 +19,7 @@
 */
 #define PLAYER	'A'
 #define WALL	'#'
-#define BOX	'B'
+#define BOX     'B'
 #define GOAL	'G'
 #define P_GOAL	'Y'
 #define B_GOAL	'X'

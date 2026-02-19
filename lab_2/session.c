@@ -1,5 +1,6 @@
 #include "session.h"
 /**** LAB 1 - functions to program (start here) ****/
+
 // using init_game and choose_level from session.h to restart the session
 void	restart_session_game(Session *session)
 {
@@ -25,6 +26,7 @@ void	print_session(Session *session)
 	printf("Best score for level %d: %d\n", lvl, session->best_score[lvl]);
 	printf("Current Level:%d, Current Score:%d\n", session->current_game.level, session->current_game.score);
 }
+
 // Ths function is assigning the current score to the best score
 void	new_game_score(Session *session)
 {
@@ -37,10 +39,11 @@ void	new_game_score(Session *session)
 	if (session->best_score[level] == 0 || session->best_score[level] > score)
 		session->best_score[level] = score;
 }
+
 /**** LAB 1 - functions to program (end here) ****/
 
 // LAB 2 - functions
-void free_session(Session *s)
+void	free_session(Session *s)
 {
 	/*
 		checks if there is a session, if not returrns and don't do nothing
