@@ -47,6 +47,14 @@ void	new_game(Session *session)
 	restart_session_game(session);
 	run_game(session);
 }
+/*
+ *  @brief: Save the current game in a file
+ *
+ *  @details: This function asks the user to enter a filename where the user want to store the current game,
+ *  it stores the current game in the same format as it's supposed to be loaded in. The file is saved in the
+ *  same folder the user is working in othewise user can specify the specific path and it'll be stored there.
+ * 
+ */
 
 void	save_game(Session *session)
 {
@@ -54,7 +62,7 @@ void	save_game(Session *session)
 	char saved_game_file[256];
 	FILE *fp;
 	Game *g = &session->current_game;
-	printf("Enter filename to save: ");
+	printf("Enter filename to save(use .txt for ease): ");
 	int	c;
 
 	while ((c = getchar() != '\n') && c != EOF) { }
@@ -93,7 +101,14 @@ void	save_game(Session *session)
 	fclose(fp);
 	printf("Game saved successfully.\n");
 }
-
+/*
+ *  @brief: Load the current game from a file
+ *
+ *  @details: This function allows the user to load the game from thee file user wants. First,
+ *  it asks the user for the name of the file, and loads it. User has to choose the option resume game to play it.
+ *  It follows the same structure in scanf as of save_game for the retrieval of data.
+ * 
+ */
 void	load_game(Session *session)
 {
 	char	filename[256];
