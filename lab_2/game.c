@@ -310,7 +310,11 @@ State	move(State s, Option o)
 /**** LAB 2 - functions to program (start here) ****/
 void free_state(State *s)
 {
-    if (!s)
+	/*
+		check first just in case there is no pointer to free then
+		frees the grid and set columns and rows to 0 (doesn't needed to be free)
+	*/
+    if (!s->grid)
 		return;
 
     if (s->grid)
@@ -322,6 +326,10 @@ void free_state(State *s)
 
 void free_game(Game *g)
 {
+	/*
+		set everythin to 0
+		and then free the state
+	*/
 	g->level=0;
     g->score=0;
     free_state(&(g->state));

@@ -55,6 +55,10 @@ void	save_game(Session *session)
 	FILE *fp;
 	Game *g = &session->current_game;
 	printf("Enter filename to save: ");
+	int	c;
+
+	while ((c = getchar() != '\n') && c != EOF) { }
+	
 	if(fgets(saved_game_file, sizeof(saved_game_file), stdin) == NULL)
 		return ;	
 	// remove the new line 
@@ -83,10 +87,8 @@ void	save_game(Session *session)
 	for(int i = 0; i < g->state.rows; i++)
 	{
 		for(int j= 0; j < g->state.columns; j++)
-		{
 			fputc(g->state.grid[i][j], fp);
-			fputc('\n',fp);
-		}
+		fputc('\n',fp);
 	}
 	fclose(fp);
 	printf("Game saved successfully.\n");
@@ -94,19 +96,24 @@ void	save_game(Session *session)
 
 void	load_game(Session *session)
 {
-	char filename[256];
-	FILE *file;
+	char	filename[256];
+	FILE	*file;
     //Initialising new variables to store data
-    int score, level, rows, columns;
-	Game *g = &session->current_game;
+    int		score, level, rows, columns;
+	Game	*g = &session->current_game;
+	int		c;
 
 	printf("Enter filename to load: ");
-	if(fgets(filename,  sizeof(filename), stdin) == NULL){
+	// Flushing the input buffer to avoid reading leftover newline characters (important for fgets to work correctly)
+	while ((c = getchar() != '\n') && (c != EOF)) { }
+	
+	if(fgets(filename,  sizeof(filename), stdin) == NULL)
 		return;
-	}
+
 	for (int i = 0; filename[i]!= '\0'; i++)
 	{
-		if(filename[i] == '\n'){
+		if(filename[i] == '\n')
+		{
 			filename[i] = '\0';
 			break;
 		}
@@ -127,21 +134,24 @@ void	load_game(Session *session)
 	fscanf(file, "State:\n");
     fscanf(file, "rows: %d\n", &rows);
     fscanf(file, "columns: %d\n", &columns);
+
     //Retreave the values of the game.
     g->score=score;
     g->level=level;
     g->state.rows=rows;
     g->state.columns=columns;
+	
 	// Allocate grid dynamically
 	g->state.grid =make_grid(rows, columns);
 
     //Read grid
-    for(int i=0; i<rows;++i){
-        for(int j=0; j<columns; ++j){
-            fscanf(file, "%c", g->state.grid[i][j]);
-        }
+    for(int i=0; i<rows;++i)
+	{
+        for(int j=0; j<columns; ++j)
+            fscanf(file, "%c", &g->state.grid[i][j]);
 		fscanf(file, "\n"); // new line after each row
     }
+
 	fclose(file);
 	printf("Game loaded successfully.\n");
 }
