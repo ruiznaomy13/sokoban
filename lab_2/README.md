@@ -4,10 +4,26 @@ This is a simple console-based Sokoban game written in C.
 
 ## How to Compile
 
+This project is written in standard C and compiles correctly using **GCC**.
+But this project is unable to compile using the default VS Code C/C++ extension
+compiler configuration on Windows, because that setup does not automatically
+provide a GCC toolchain.
+
+To compile and run the project, please use GCC from the command line or
+using MinGW-w64 on Windows.
+
 To compile the game, navigate to the project directory in your terminal and run the following command:
 
+**Note:** gcc must be available in the system PATH.
+
 ```bash
+# Linux/ macOS / WSL / Git Bash
 gcc *.c -o sokoban
+```
+
+```bash
+# Windows
+gcc *.c -o sokoban -o sokoban.exe
 ```
 
 ## How to Run
@@ -23,7 +39,12 @@ After successful compilation, you can run the game with:
 Upon starting the game, you will be presented with a main menu:
 
 ```
-[INFO] Menu options: 1. New game. 2. Save game. 3. Load game. 4. Resume game. 5. Exit.
+[INFO] Menu options:
+  1. New game
+  2. Save game
+  3. Load game
+  4. Resume game
+  5. Exit.
 [INFO] Enter an integer [1-5]:
 ```
 
@@ -53,5 +74,5 @@ Options: 1. Up | 2. Right | 3. Down | 4. Left | 5. Show best move 6. Quit game
 ```
 
 *   **1. Up / 2. Right / 3. Down / 4. Left:** Move the player (represented by 'A') in the chosen direction. The goal is to push all boxes ('B') onto the target locations ('G').
-*   **5. Show best move:** (Functionality not detailed in example, but typically suggests an optimal move).
+*   **5. Show best move:** (not implemented yet).
 *   **6. Quit game:** Return to the main menu.
