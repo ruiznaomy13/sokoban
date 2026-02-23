@@ -4,19 +4,17 @@
 // using init_game and choose_level from session.h to restart the session
 void	restart_session_game(Session *session)
 {
-	free_game(&session->current_game);
+	free_session(session);
 	init_game(&session->current_game);
-	choose_level(&session->current_game);
 }
 
 // This function is initialisng the session by setting the best score to 'zero'
 // And it also initialise the current game by using init_game function
 void	init_session(Session *session)
 {
-	// TODO
-	for (int i=0; i <= MAX_LEVELS; i++)
-		session->best_score[i] = 0;
-	init_game(&session->current_game);
+	for (int level=0; level <= MAX_LEVELS; ++level)
+		session->best_score[level] = 0;
+	restart_session_game(session);
 }
 
 // Prints the best score and the current game data
@@ -24,7 +22,7 @@ void	print_session(Session *session)
 { 
 	int	lvl = session->current_game.level;
 	printf("Best score for level %d: %d\n", lvl, session->best_score[lvl]);
-	printf("Current Level:%d, Current Score:%d\n", session->current_game.level, session->current_game.score);
+	print_game(session->current_game);
 }
 
 // Ths function is assigning the current score to the best score
@@ -51,5 +49,6 @@ void	free_session(Session *s)
 	*/
 	if (!s)
 		return ;
+	
 	free_game(&s->current_game);
 }

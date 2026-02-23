@@ -82,7 +82,7 @@ bool	is_valid(FILE *file)
 
 	if (count_player != 1)
 		return false;
-	if (count_boxes != count_goals)
+	if (count_boxes != count_goals || count_boxes < 1)
 		return false;
 
 	rewind(file);

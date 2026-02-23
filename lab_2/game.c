@@ -1,6 +1,7 @@
 #include "game.h"
+#include "common.h"
+#include <stdio.h>
 
-/**** LAB 1 - given functions ****/
 void print_options()
 {
 	printf("Options:\n");
@@ -49,7 +50,6 @@ bool	set_level(State *s, unsigned level)
 			strcpy(s->grid[3], "#GBABG#");
 			strcpy(s->grid[4], "###B###");
 			strcpy(s->grid[5], "###G###");
-			;
 			strcpy(s->grid[6], "#######");
 			break;
 		case 4:
@@ -65,7 +65,7 @@ bool	set_level(State *s, unsigned level)
 			strcpy(s->grid[5], "####....");
 			break;
 		default:
-			printf("[ERROR]: level not found!\n");
+			printf(MAGENTA"[ERROR]: level not found!\n");
 			return false;
 	};
 
@@ -104,12 +104,25 @@ void	choose_level(Game *game)
 /**** LAB 1 - functions to program (start here) ****/
 void print_state(State s)
 {
+	printf(CYAN"\n");
 	for(int i = 0; i < s.rows; i++)
 	{
 		for(int j = 0; j < s.columns; j++)
-			printf("%c", s.grid[i][j]);
+		{
+			if (s.grid[i][j] == PLAYER || s.grid[i][j] == P_GOAL)
+				printf(CYAN"%c", s.grid[i][j]);
+			else if (s.grid[i][j] == BOX)
+				printf(YELLOW"%c", s.grid[i][j]);
+			else if (s.grid[i][j] == B_GOAL)
+				printf(GREEN"%c", s.grid[i][j]);
+			else if (s.grid[i][j] == GOAL)
+				printf(RED"%c", s.grid[i][j]);
+			else
+				printf(RESET"%c", s.grid[i][j]);
+		}
 		printf("\n");
 	}
+	printf(RESET"\n");
 }
 
 void print_game(Game game)
@@ -120,11 +133,12 @@ void print_game(Game game)
 
 bool is_terminal(State s)
 {
-	for(int i= 0; i< s.rows; i++)
+	for(int row=0; row<s.rows; ++row)
 	{
-		for(int j= 0; j < s.columns; j++)
+		for(int col= 0; col < s.columns; ++col)
 		{
-			if(s.grid[i][j] == BOX)
+			if(s.grid[row][col] == GOAL
+			    || s.grid[row][col] == P_GOAL)
 				return false;
 		}
 	}
@@ -314,9 +328,6 @@ void free_state(State *s)
 	frees the grid and set columns and rows to 0 (doesn't needed to be free)
 */
 {
-	if (!s->grid)
-		return;
-
 	if (s->grid)
 		s->grid = free_grid(s->grid);
 

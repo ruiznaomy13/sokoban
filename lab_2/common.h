@@ -26,4 +26,16 @@
 #define EMPTY	'.'
 
 #define MAX_STR_LENGTH 50
+
+
+// COLORS (just for fun)
+# define RED        "\x1B[31m"
+# define GREEN      "\x1B[32m"
+# define YELLOW     "\x1B[33m"
+# define BLUE       "\x1B[34m"
+# define MAGENTA    "\x1B[35m"
+# define CYAN       "\x1b[36m"
+# define RESET      "\x1b[0m"
+
+
 #endif

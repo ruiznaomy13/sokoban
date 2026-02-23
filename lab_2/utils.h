@@ -2,6 +2,7 @@
 #define _UTILS_H_
 
 #include "common.h"
+
 // BORRAR
 void  print_grid(char **str);
 

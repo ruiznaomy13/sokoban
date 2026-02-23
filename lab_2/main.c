@@ -7,14 +7,15 @@ void	run_game(Session *session)
 	do
 	{
 		print_session(session);
-		print_state(session->current_game.state);
 
 		Option game_option;
 
 		do
 		{
+			printf(BLUE"");
 			print_options();
 			printf("[INFO] Enter a game option [%d-%d]: ", MOVE_UP, QUIT_GAME);
+			printf(RESET"");
 			game_option = read_int();
 		} while (!is_valid_option(game_option));
 
@@ -39,12 +40,14 @@ void	run_game(Session *session)
 
 	new_game_score(session);
 	print_session(session);
-	printf("[INFO] LEVEL COMPLETED!!!\n");
+	printf(GREEN"[INFO] LEVEL COMPLETED!!!");
+	printf(RESET"\n\n");
 }
 
 void	new_game(Session *session)
 {
 	restart_session_game(session);
+	choose_level(&session->current_game);
 	run_game(session);
 }
 
@@ -65,7 +68,7 @@ void	save_game(Session *session)
 	printf("Enter filename to save(use .txt for ease): ");
 	int	c;
 
-	while ((c = getchar() != '\n') && c != EOF) { }
+	while ((c = getchar()) != '\n' && c != EOF) { }
 	
 	if(fgets(saved_game_file, sizeof(saved_game_file), stdin) == NULL)
 		return ;	
@@ -83,7 +86,7 @@ void	save_game(Session *session)
 	// if the file doesn't exist it shows an error message
 	if(fp == NULL)
 	{
-		printf("Error opening file fo writing.\n");
+		printf(MAGENTA"[ERROR] Opening file for writing.\n");
 		return;
 	}
 	// The structure in which the info will be saved in the file
@@ -99,7 +102,7 @@ void	save_game(Session *session)
 		fputc('\n',fp);
 	}
 	fclose(fp);
-	printf("Game saved successfully.\n");
+	printf("[INFO] Game saved successfully.\n");
 }
 
 void	load_game(Session *session)
@@ -139,13 +142,13 @@ void	load_game(Session *session)
 	// if the file doesn't exist it shows an error message
 	if(file == NULL)
 	{
-		printf("Error opening file fo writing.\n");
+		printf(MAGENTA"[ERROR] Opening file fo writing.\n");
 		return;
 	}
 
-	if (!is_valid(file))
+	if (!is_valid(file)) // we check that the file has the correct format and is playable (not won yet)
 	{
-		printf("Invalid file format.\n");
+		printf(MAGENTA"[ERROR]: Invalid file format.\n");
 		fclose(file);
 		return;
 	}
@@ -166,7 +169,13 @@ void	load_game(Session *session)
 	g->state.columns = columns;
 	
 	// Allocate grid dynamically
-	g->state.grid =make_grid(rows, columns);
+	g->state.grid = make_grid(rows, columns);
+
+	if (!g->state.grid)
+	{
+		printf(MAGENTA"[ERROR] Somenthing went wrong.\n");
+		return ;
+	}
 
 	//Read grid
 	for(int i=0; i<rows;++i)
@@ -177,7 +186,7 @@ void	load_game(Session *session)
 	}
 
 	fclose(file);
-	printf("Game loaded successfully.\n");
+	printf("[INFO] Game loaded successfully.\n");
 }
 
 void	resume_game(Session *session)
@@ -189,11 +198,11 @@ void	resume_game(Session *session)
 {
 	if (session->current_game.state.grid == NULL)
 	{
-		printf("\t[ANY GAME STARTED]\n");
+		printf("\t[WARNING] Any game started yet.\n");
 		return ;
 	}
 
-	printf("\tRESUMING GAME ... \n");
+	printf("\t[INFO] Resuming game ... \n");
 	run_game(session);
 }
 
