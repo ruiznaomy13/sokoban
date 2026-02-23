@@ -22,6 +22,7 @@ void	init_session(Session *session)
 void	print_session(Session *session)
 { 
 	int	lvl = session->current_game.level;
+
 	printf("Best score for level %d: %d\n", lvl, session->best_score[lvl]);
 	printf("Current Level:%d, Current Score:%d\n", session->current_game.level, session->current_game.score);
 }
