@@ -25,9 +25,10 @@ void run_game(Session *session)
             case SHOW_BEST_MOVE:
                 int best_move = show_best_move(game); // LAB 3
 			    if(best_move == INVALID_MOVE)
-			    	printf("[ERROR] The best move is unknown, since the game is not solvable in %d steps.\n", MAX_DEPTH);
+			    	printf(RED"[ERROR] The best move is unknown, since the game is not solvable in %d steps.\n", MAX_DEPTH);
 			    else
-				    printf("[INFO] Best move is %d.\n", best_move);		
+				    printf(BLUE"[INFO] Best move is %d.\n", best_move);	
+				printf(RESET"\n");	
 		        continue;
                 break;
             case QUIT_GAME:
@@ -39,7 +40,8 @@ void run_game(Session *session)
     
     new_game_score(session);
     print_session(session);
-    printf("[INFO] LEVEL COMPLETED!!!\n");
+    printf(GREEN"\t[INFO] LEVEL COMPLETED!!!\n");
+	printf(RESET"\n");
 }
 
 void new_game(Session *session)

@@ -1,6 +1,5 @@
 #include "game.h"
 
-
 /**** LAB 1 - given functions ****/
 void print_options(){
     printf("Options:\n");
@@ -306,7 +305,6 @@ State	move(State s, Option o)
 		return s; // in future maybe handle it
 
 	update_grid(s, o, pos); // apply the new move to the grid
-	print_state(s); // updates the map on screen
 
 	return	s;
 }
@@ -382,15 +380,129 @@ char **make_grid(int rows, int columns)
 /**** LAB 2 - functions to program (end here) ****/
 
 /**** LAB 3 - functions to program (start here) ****/
-Game copy(Game *g){
-	Game g_copy;
-    return g_copy;
-}
-int recursive_best_score(Game *g, int depth){
-	return 0;
+
+/*
+** Deep copy of a game
+*/
+Game	copy(Game *g)
+{
+    Game new_game;
+
+    new_game.score = g->score;
+    new_game.level = g->level;
+
+    new_game.state.rows = g->state.rows;
+    new_game.state.columns = g->state.columns;
+
+    new_game.state.grid = make_grid(new_game.state.rows, new_game.state.columns + 1);
+
+    for (int i = 0; i < new_game.state.rows; i++)
+    {
+        for (int j = 0; j < new_game.state.columns; j++)
+            new_game.state.grid[i][j] = g->state.grid[i][j];
+    }
+
+    return new_game;
 }
 
-int show_best_move(Game *g){
-	return INVALID_MOVE;
+/*
+** Check if two states are identical
+*/
+static bool same_state(State a, State b)
+{
+	for (int i = 0; i < a.rows; i++)
+	{
+		for (int j = 0; j < a.columns; j++)
+		{
+			if (a.grid[i][j] != b.grid[i][j])
+				return false;
+		}
+	}
+	return true;
 }
-/**** LAB 3 - functions to program (end here) ****/
+
+/*
+** Recursive search of the best score
+*/
+int recursive_best_score(Game *g, int depth)
+{
+    if (is_terminal(g->state))
+        return g->score;
+
+    if (depth >= MAX_DEPTH)
+        return INT_MAX;
+
+    int best_score = INT_MAX;
+
+    for (Option o = MOVE_UP; o <= MOVE_LEFT; o++)
+    {
+        Game new_game = copy(g);
+
+        Game before = copy(&new_game);
+
+        new_game.state = move(new_game.state, o);
+
+        /* ignore invalid moves */
+        if (same_state(before.state, new_game.state))
+        {
+            free_game(&before);
+            free_game(&new_game);
+            continue;
+        }
+
+        free_game(&before);
+
+        new_game.score++;
+
+        int score = recursive_best_score(&new_game, depth + 1);
+
+        if (score < best_score)
+            best_score = score;
+
+        free_game(&new_game);
+    }
+
+    return best_score;
+}
+
+/*
+** Determine best move from current state
+*/
+int	show_best_move(Game *g)
+{
+    int best_score = INT_MAX;
+    int best_move = INVALID_MOVE;
+
+    for (Option o = MOVE_UP; o <= MOVE_LEFT; o++)
+    {
+        Game new_game = copy(g);
+
+        Game before = copy(&new_game);
+
+        new_game.state = move(new_game.state, o);
+
+        /* ignore invalid moves */
+        if (same_state(before.state, new_game.state))
+        {
+            free_game(&before);
+            free_game(&new_game);
+            continue;
+        }
+
+        free_game(&before);
+
+        new_game.score++;
+
+        int score = recursive_best_score(&new_game, 1);
+
+        if (score < best_score)
+        {
+            best_score = score;
+            best_move = o;
+        }
+
+        free_game(&new_game);
+    }
+
+    return best_move;
+}
