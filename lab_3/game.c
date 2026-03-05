@@ -400,7 +400,9 @@ Game	copy(Game *g)
     {
         for (int j = 0; j < new_game.state.columns; j++)
             new_game.state.grid[i][j] = g->state.grid[i][j];
-    }
+		// Ensure null-termination of each row
+		new_game.state.grid[i][new_game.state.columns] = '\0';
+	}
 
     return new_game;
 }
@@ -410,6 +412,12 @@ Game	copy(Game *g)
 */
 static bool same_state(State a, State b)
 {
+	if (a.rows != b.rows || a.columns != b.columns)
+	{
+		return false;
+	}
+	
+
 	for (int i = 0; i < a.rows; i++)
 	{
 		for (int j = 0; j < a.columns; j++)
@@ -430,7 +438,7 @@ int recursive_best_score(Game *g, int depth)
         return g->score;
 
     if (depth >= MAX_DEPTH)
-        return INT_MAX;
+        return 0;// we can also return a heuristic score here instead of 0
 
     int best_score = INT_MAX;
 
@@ -439,7 +447,7 @@ int recursive_best_score(Game *g, int depth)
         Game new_game = copy(g);
 
         Game before = copy(&new_game);
-
+		
         new_game.state = move(new_game.state, o);
 
         /* ignore invalid moves */
@@ -456,13 +464,13 @@ int recursive_best_score(Game *g, int depth)
 
         int score = recursive_best_score(&new_game, depth + 1);
 
-        if (score < best_score)
+		if(score> 0 && score < best_score) // only consider valid scores
             best_score = score;
 
         free_game(&new_game);
     }
 
-    return best_score;
+    return (best_score == INT_MAX) ? 0 : best_score; // if no valid moves, return 0
 }
 
 /*
@@ -495,7 +503,7 @@ int	show_best_move(Game *g)
 
         int score = recursive_best_score(&new_game, 1);
 
-        if (score < best_score)
+        if (score > 0 && score < best_score)
         {
             best_score = score;
             best_move = o;
