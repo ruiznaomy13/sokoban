@@ -95,45 +95,291 @@ void choose_level(Game *game){
 
 
 /**** LAB 1 - functions to program (start here) ****/
-void print_state(State s){
-    // ToDo - Lab 1
+void print_state(State s)
+{
+	printf(CYAN"\n");
+	for(int i = 0; i < s.rows; i++)
+	{
+		for(int j = 0; j < s.columns; j++)
+		{
+			if (s.grid[i][j] == PLAYER || s.grid[i][j] == P_GOAL)
+				printf(CYAN"%c", s.grid[i][j]);
+			else if (s.grid[i][j] == BOX)
+				printf(YELLOW"%c", s.grid[i][j]);
+			else if (s.grid[i][j] == B_GOAL)
+				printf(GREEN"%c", s.grid[i][j]);
+			else if (s.grid[i][j] == GOAL)
+				printf(RED"%c", s.grid[i][j]);
+			else
+				printf(RESET"%c", s.grid[i][j]);
+		}
+		printf("\n");
+	}
+	printf(RESET"\n");
 }
 
-void print_game(Game game){
-    // ToDo - Lab 1
+void print_game(Game game)
+{
+	printf("Level: %d , Score: %d\n", game.level, game.score);
+	print_state(game.state);
+}
+
+bool is_terminal(State s)
+{
+	for(int row=0; row<s.rows; ++row)
+	{
+		for(int col= 0; col < s.columns; ++col)
+		{
+			if(s.grid[row][col] == GOAL
+			    || s.grid[row][col] == P_GOAL)
+				return false;
+		}
+	}
+	return true;
+}
+
+Pos	new_position(Pos curr, Option o)
+/*
+* @brief: Calculate the new position after a move
+*
+* @details: Given a current position and a move direction, returns the resulting position.
+*
+* @return: New position after applying the move
+*/
+{
+	Pos	p = curr;
+
+	switch (o)
+	{
+		case MOVE_DOWN:
+			p.y++;
+			break;
+		case MOVE_UP:
+			p.y--;
+			break;
+		case MOVE_RIGHT:
+			p.x++;
+			break;
+		case MOVE_LEFT:
+			p.x--;
+			break;
+		default:
+			break;
+	}
+	return (p);
+}
+
+bool    in_bounds(State s, Pos p)
+{
+	return (p.y >= 0 && p.y < s.rows
+		&& p.x >= 0 && p.x < s.columns);
+}
+
+bool	valid_move(State s, Pos new_pos, bool box, Option o)
+/*
+* @brief: Check whether a move is valid
+*
+* @details: Validates if the new player position (and box if pushed) is within bounds
+*          and does not collide with walls or other boxes.
+*
+* @return: True if the move is valid, false otherwise
+*/
+{
+	if (!in_bounds(s, new_pos)) // check the bounds (in this case maybe is not usefull)
+		return (false);
+
+	if (s.grid[new_pos.y][new_pos.x] == WALL) // check if in new position is a wall
+		return (false);
+
+	if (box) // also check for box
+	{
+		Pos next_pos = new_position(new_pos, o);
+
+		if (!in_bounds(s, next_pos))
+			return (false);
+
+		if (s.grid[next_pos.y][next_pos.x] == WALL
+		|| s.grid[next_pos.y][next_pos.x] == BOX) // we cannot update if there is wall or another box
+			return (false);
+	}
+	return (true);
+}
+
+char	change_cell(char c, bool box)
+/*
+* @brief: Determine the new value of a grid cell after a move
+*
+* @details: Updates the character of a cell based on whether the player or a box
+*          is moving into or out of it.
+*
+* @return: The new character for the cell
+*/
+{
+	switch (c)
+	{
+		case PLAYER:
+			return EMPTY;
+		case BOX:
+			return PLAYER;
+		case EMPTY:
+			return (box ? BOX : PLAYER);
+		case GOAL:
+			return (box ? B_GOAL : P_GOAL);
+		case P_GOAL:
+			return GOAL;
+		case B_GOAL:
+			return P_GOAL;
+		default:
+			return c;
+	}
 }
 
 
-bool is_terminal(State s){
-    // ToDo - Lab 1
-    return false;
+void	update_grid(State s, Option o, Pos pos)
+/*
+*  @brief: Update the game grid after a move
+*
+*  @details: Checks if the movement is valid, handles box movement if needed,
+*  and updates the player's and box's positions on the grid.
+*/
+{
+	Pos     new = new_position(pos, o);
+	bool    box = (s.grid[new.y][new.x] == BOX
+				|| s.grid[new.y][new.x] == B_GOAL);
+	Pos     next = {0, 0};
+
+	// Return immediately if the move is invalid
+	if (!valid_move(s, new, box, o))
+		return;
+
+	if (box)
+		next = new_position(new, o);
+
+	char curr = s.grid[pos.y][pos.x];     // current player cell
+	char dest = s.grid[new.y][new.x];     // destination cell for player
+
+	if (box)
+	{
+		char next_cell = s.grid[next.y][next.x]; // destination cell for the box
+		s.grid[next.y][next.x] = change_cell(next_cell, true);  // move the box
+		s.grid[new.y][new.x] = change_cell(dest, false);        // move the player
+	}
+	else
+	{
+		s.grid[new.y][new.x] = change_cell(dest, false);        // move the player
+	}
+
+	s.grid[pos.y][pos.x] = change_cell(curr, false); // clear old player position
 }
 
-State move(State s, Option o){
-	// ToDo - Lab 1
-    return s;
+bool	player_pos(State s, Pos *pos)
+/*
+* @brief: Find the player's position in the grid
+*
+* @details: Searches the entire grid for the player. If found, saves the
+*          current position in the provided Pos pointer.
+*/
+{
+	for (int i = 0; i < s.rows; i++)
+	{
+		for (int j = 0; j < s.columns; j++)
+		{
+			if (s.grid[i][j] == PLAYER || s.grid[i][j] == P_GOAL)
+			{
+				pos->y = i;
+				pos->x = j;
+				return (true);
+			}
+		}
+	}
+	return (false);
+}
+
+State	move(State s, Option o)
+/*
+	@return: new State after applying a new move
+*/
+{
+	Pos pos = {0, 0};
+
+	if (!player_pos(s, &pos)) // check if there is a player
+		return s; // in future maybe handle it
+
+	update_grid(s, o, pos); // apply the new move to the grid
+	print_state(s); // updates the map on screen
+
+	return	s;
 }
 
 /**** LAB 1 - functions to program (end here) ****/
 
 
-
 /**** LAB 2 - functions to program (start here) ****/
-void free_state(State *s){
-    // ToDo - Lab 2
+void free_state(State *s)
+/*
+	check first just in case there is no pointer to free then
+	frees the grid and set columns and rows to 0 (doesn't needed to be free)
+*/
+{
+	if (s->grid)
+		s->grid = free_grid(s->grid);
+
+	s->columns = 0;
+	s->rows = 0;
 }
 
-void free_game(Game *g){
-    // ToDo - Lab 2
+void free_game(Game *g)
+/*
+	set everythin to 0
+	and then free the state
+*/
+{
+	g->level=0;
+	g->score=0;
+	free_state(&(g->state));
 }
 
-char** make_grid(int rows, int columns){
-    // ToDo - Lab 2
-    return NULL;
+char	**free_grid(char **grid)
+/*
+	free the memmory of a char**
+	it nust be finished with NULL
+*/
+{
+	int	i = -1;
 
+	if (!grid)
+		return NULL;
+	while (grid[++i])
+		free(grid[i]);
+	free(grid);
+	return NULL;
 }
+
+char **make_grid(int rows, int columns)
+	/*
+		This function allows that our grid have any size
+		allocates memory for each row and each colum space
+		also we make sure to protect each calloc
+	*/
+{
+	char	**grid = calloc(rows + 1, sizeof(char *));
+
+	if (!grid)
+		return (NULL);
+
+	for (int i=0; i < rows; ++i)
+	{
+		grid[i] = calloc(columns, sizeof(char));
+		
+		if (!grid[i])
+			return (free_grid(grid));
+	}
+	grid[rows] = NULL;
+
+	return grid;
+}
+
 /**** LAB 2 - functions to program (end here) ****/
-
 
 /**** LAB 3 - functions to program (start here) ****/
 Game copy(Game *g){

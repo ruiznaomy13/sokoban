@@ -42,25 +42,171 @@ void run_game(Session *session)
     printf("[INFO] LEVEL COMPLETED!!!\n");
 }
 
-void new_game(Session *session){
+void new_game(Session *session)
+{
     restart_session_game(session);
     choose_level(&(session->current_game));
     run_game(session);
 }
 
-void save_game(Session *session){
-    // ToDo - Lab 2
+void	save_game(Session *session)
+/*
+*  @brief: Save the current game in a file
+*
+*  @details: This function asks the user to enter a filename where the user want to store the current game,
+*  it stores the current game in the same format as it's supposed to be loaded in. The file is saved in the
+*  same folder the user is working in othewise user can specify the specific path and it'll be stored there.
+* 
+*/
+{
+	// Creating a new file here
+	char saved_game_file[256];
+	FILE *fp;
+	Game *g = &session->current_game;
+	printf("Enter filename to save(use .txt for ease): ");
+	int	c;
+
+	while ((c = getchar()) != '\n' && c != EOF) { }
+	
+	if(fgets(saved_game_file, sizeof(saved_game_file), stdin) == NULL)
+		return ;	
+	// remove the new line 
+	for(int i= 0; saved_game_file[i]!=0; i++)
+	{
+		if(saved_game_file[i] == '\n')
+		{
+			saved_game_file[i] = '\0';
+			break;
+		}
+	}
+	// opening the file in write mode 
+	fp = fopen(saved_game_file, "w");
+	// if the file doesn't exist it shows an error message
+	if(fp == NULL)
+	{
+		printf(MAGENTA"[ERROR] Opening file for writing.\n");
+		return;
+	}
+	// The structure in which the info will be saved in the file
+	fprintf(fp, "Score: %d", g->score);
+	fprintf(fp, "\nLevel: %d", g->level);
+	fprintf(fp, "\nState:");
+	fprintf(fp, "\nrows: %d", g->state.rows);
+	fprintf(fp, "\ncolumns: %d\n", g->state.columns);
+	for(int i = 0; i < g->state.rows; i++)
+	{
+		for(int j= 0; j < g->state.columns; j++)
+			fputc(g->state.grid[i][j], fp);
+		fputc('\n',fp);
+	}
+	fclose(fp);
+	printf("[INFO] Game saved successfully.\n");
 }
 
-void load_game(Session *session){
-    // ToDo - Lab 2
+void	load_game(Session *session)
+/*
+*  @brief: Load the current game from a file
+*
+*  @details: This function allows the user to load the game from thee file user wants. First,
+*  it asks the user for the name of the file, and loads it. User has to choose the option resume game to play it.
+*  It follows the same structure in scanf as of save_game for the retrieval of data.
+* 
+*/
+{
+	char	filename[256];
+	FILE	*file;
+	//Initialising new variables to store data
+	int		score, level, rows, columns;
+	Game	*g = &session->current_game;
+	int		c;
+
+	printf("Enter filename to load: ");
+	// Flushing the input buffer to avoid reading leftover newline characters (important for fgets to work correctly)
+	while ((c = getchar() != '\n') && (c != EOF)) { }
+	
+	if(fgets(filename,  sizeof(filename), stdin) == NULL)
+		return;
+
+	for (int i = 0; filename[i]!= '\0'; i++)
+	{
+		if(filename[i] == '\n')
+		{
+			filename[i] = '\0';
+			break;
+		}
+	}
+	
+	file = fopen(filename, "r");
+	// if the file doesn't exist it shows an error message
+	if(file == NULL)
+	{
+		printf(MAGENTA"[ERROR] Opening file fo writing.\n");
+		return;
+	}
+
+	if (!is_valid(file)) // we check that the file has the correct format and is playable (not won yet)
+	{
+		printf(MAGENTA"[ERROR]: Invalid file format.\n");
+		fclose(file);
+		return;
+	}
+
+	free_session(session);
+
+	// free previous game
+	fscanf(file, "Score: %d\n", &score);
+	fscanf(file, "Level: %d\n", &level);
+	fscanf(file, "State:\n");
+	fscanf(file, "rows: %d\n", &rows);
+	fscanf(file, "columns: %d\n", &columns);
+
+	//Retreave the values of the game.
+	g->score = score;
+	g->level = level;
+	g->state.rows = rows;
+	g->state.columns = columns;
+	
+	// Allocate grid dynamically
+	g->state.grid = make_grid(rows, columns);
+
+	if (!g->state.grid)
+	{
+		printf(MAGENTA"[ERROR] Somenthing went wrong.\n");
+		return ;
+	}
+
+	//Read grid
+	for(int i=0; i<rows;++i)
+	{
+		for(int j=0; j<columns; ++j)
+			fscanf(file, "%c", &g->state.grid[i][j]);
+		fscanf(file, "\n"); // new line after each row
+	}
+
+	fclose(file);
+	printf("[INFO] Game loaded successfully.\n");
 }
 
-void resume_game(Session *session){
-    // ToDo - Lab 2  	
+void	resume_game(Session *session)
+/*
+	resume the game that has been initialized
+	check if there is a current game
+	an then the run the game
+*/
+{
+	if (session->current_game.state.grid == NULL)
+	{
+		printf("\t[WARNING] Any game started yet.\n");
+		return ;
+	}
+
+	printf("\t[INFO] Resuming game ... \n");
+	run_game(session);
 }
 
-void print_menu(){
+
+void print_menu()
+{
     printf("[INFO] Menu options:\n");
     printf("\t1. New game.\n");  // LAB1 - basic lab for creating grid and moves
     printf("\t2. Save game.\n"); // LAB2 - Writing file
@@ -70,7 +216,8 @@ void print_menu(){
 }
 
 
-void run(Session *session){
+void run(Session *session)
+{
     int option;
     do{
         print_menu();
@@ -101,8 +248,10 @@ void run(Session *session){
     free_session(session);
 }
 
-int main(){
+int main()
+{
     Session session;
+
     init_session(&session);
     run(&session);
 }

@@ -3,6 +3,9 @@
 
 #include "common.h"
 
+// BORRAR
+void  print_grid(char **str);
+
 int read_int(); 
 
 void read_filename(char* filename); 
@@ -11,4 +14,7 @@ int max(int a, int b);
 
 int min(int a, int b);
 
+
+// extra function
+bool	is_valid(FILE *file);
 #endif
